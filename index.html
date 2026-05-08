@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>GoBusExpress - Book Your Journey</title>
+    <!-- Google Fonts + Font Awesome for Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fc 0%, #eef2f8 100%);
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+        }
+
+        /* main container */
+        .booking-container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        /* header & branding */
+        .brand {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .logo h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(120deg, #1e3c72, #2b4f8c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .logo p {
+            color: #5a6874;
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+
+        .badge {
+            background: white;
+            padding: 8px 18px;
+            border-radius: 40px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #1e3c72;
+        }
+
+        .badge i {
+            margin-right: 6px;
+            color: #f5b042;
+        }
+
+        /* search card */
+        .search-card {
+            background: white;
+            border-radius: 32px;
+            padding: 1.8rem 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2.5rem;
+            transition: all 0.2s;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            align-items: flex-end;
+        }
+
+        .input-group {
+            flex: 1;
+            min-width: 160px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #4a627a;
+            margin-bottom: 6px;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 24px;
+            font-size: 0.95rem;
+            background: #fff;
+            transition: 0.2s;
+            outline: none;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: #2b4f8c;
+            box-shadow: 0 0 0 3px rgba(43, 79, 140, 0.1);
+        }
+
+        .search-btn {
+            background: #1e3c72;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 6px 14px rgba(30,60,114,0.25);
+        }
+
+        .search-btn:hover {
+            background: #0f2c52;
+            transform: scale(0.97);
+        }
+
+        /* results section + ticket layout */
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .results-header h3 {
+            font-weight: 600;
+            font-size: 1.4rem;
+            color: #1f2e3e;
+        }
+
+        .results-header span {
+            color: #6c7e91;
+            font-size: 0.85rem;
+        }
+
+        .bus-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        /* bus card */
+        .bus-card {
+            background: white;
+            border-radius: 28px;
+            padding: 1.2rem 1.6rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.02);
+            border: 1px solid #eef2f8;
+        }
+
+        .bus-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 28px -12px rgba(0, 0, 0, 0.12);
+            border-color: #cddfed;
+        }
+
+        .bus-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            min-width: 180px;
+        }
+
+        .bus-name {
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: #1f2e3e;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bus-name i {
+            color: #f5b042;
+        }
+
+        .route-detail {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.9rem;
+            color: #4e6e8a;
+        }
+
+        .time {
+            font-weight: 600;
+            color: #1f3b4c;
+        }
+
+        .price {
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: #1e3c72;
+        }
+
+        .seat-info {
+            background: #f0f6fe;
+            padding: 6px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #2b4f8c;
+        }
+
+        .book-btn {
+            background: #1e3c72;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .book-btn:disabled {
+            background: #b9c8e0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .book-btn:not(:disabled):hover {
+            background: #0c2a4a;
+            transform: scale(0.96);
+        }
+
+        /* modal overlay */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: white;
+            max-width: 450px;
+            width: 90%;
+            border-radius: 36px;
+            padding: 1.8rem;
+            text-align: center;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.2);
+            animation: fadeUp 0.2s ease;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        .modal-content i.fa-check-circle {
+            font-size: 3.5rem;
+            color: #2a9d8f;
+            margin-bottom: 1rem;
+        }
+
+        .modal-content h3 {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-content p {
+            color: #4b5e72;
+            margin: 0.8rem 0;
+        }
+
+        .modal-close {
+            background: #1e3c72;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 500;
+            margin-top: 1rem;
+            cursor: pointer;
+        }
+
+        /* empty state */
+        .empty-state {
+            background: white;
+            border-radius: 40px;
+            text-align: center;
+            padding: 3rem;
+            color: #6a7f9b;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.6;
+        }
+
+        /* footer & responsive */
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            color: #5f7d9c;
+            font-size: 0.8rem;
+            border-top: 1px solid #e2edf7;
+            padding-top: 2rem;
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding: 1rem;
+            }
+            .bus-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .search-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .form-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="booking-container">
+    <div class="brand">
+        <div class="logo">
+            <h1><i class="fas fa-bus"></i> GoBusExpress</h1>
+            <p>safe, comfy & on-time — book your seat now</p>
+        </div>
+        <div class="badge">
+            <i class="fas fa-ticket-alt"></i> 500+ daily routes
+        </div>
+    </div>
+
+    <!-- SEARCH SECTION -->
+    <div class="search-card">
+        <div class="form-row">
+            <div class="input-group">
+                <label><i class="fas fa-map-marker-alt"></i> From</label>
+                <input type="text" id="fromCity" placeholder="e.g., New York" value="New York">
+            </div>
+            <div class="input-group">
+                <label><i class="fas fa-location-dot"></i> To</label>
+                <input type="text" id="toCity" placeholder="e.g., Boston" value="Boston">
+            </div>
+            <div class="input-group">
+                <label><i class="fas fa-calendar-alt"></i> Journey Date</label>
+                <input type="date" id="journeyDate">
+            </div>
+            <div class="input-group">
+                <button class="search-btn" id="searchBtn"><i class="fas fa-search"></i> Find Buses</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESULTS SECTION -->
+    <div class="results-header">
+        <h3><i class="fas fa-bus-simple"></i> Available Buses</h3>
+        <span id="resultCountSpan">Select route to see buses</span>
+    </div>
+    <div id="busListContainer" class="bus-list">
+        <!-- dynamic bus cards will appear here -->
+        <div class="empty-state">
+            <i class="fas fa-road"></i>
+            <p>Search for buses using the form above ✨</p>
+        </div>
+    </div>
+    <footer>
+        <i class="fas fa-shield-alt"></i> Secure booking • Free cancellation • 24/7 support
+    </footer>
+</div>
+
+<!-- MODAL CONFIRMATION -->
+<div id="bookingModal" class="modal">
+    <div class="modal-content">
+        <i class="fas fa-check-circle"></i>
+        <h3>Booking Confirmed!</h3>
+        <p id="modalMessage">Your ticket has been booked successfully.</p>
+        <button class="modal-close" id="closeModalBtn">Great, thanks!</button>
+    </div>
+</div>
+
+<script>
+    // ---------- STATIC BUS DATABASE (mock) ----------
+    const busesDatabase = [
+        { id: 1, name: "City Express", from: "New York", to: "Boston", departure: "06:30 AM", arrival: "10:45 AM", price: 49, totalSeats: 40, bookedSeats: 12 },
+        { id: 2, name: "Luxury Cruiser", from: "New York", to: "Boston", departure: "08:15 AM", arrival: "12:30 PM", price: 69, totalSeats: 35, bookedSeats: 20 },
+        { id: 3, name: "Night Rider", from: "New York", to: "Boston", departure: "11:00 PM", arrival: "03:15 AM", price: 39, totalSeats: 42, bookedSeats: 28 },
+        { id: 4, name: "StarLine", from: "Boston", to: "New York", departure: "07:00 AM", arrival: "11:20 AM", price: 52, totalSeats: 38, bookedSeats: 5 },
+        { id: 5, name: "Metro Shuttle", from: "Boston", to: "New York", departure: "02:30 PM", arrival: "06:50 PM", price: 45, totalSeats: 44, bookedSeats: 18 },
+        { id: 6, name: "GreenWay", from: "Boston", to: "New York", departure: "09:15 PM", arrival: "01:30 AM", price: 47, totalSeats: 36, bookedSeats: 22 },
+        { id: 7, name: "Harbor Express", from: "Chicago", to: "Detroit", departure: "08:00 AM", arrival: "11:10 AM", price: 58, totalSeats: 40, bookedSeats: 8 },
+        { id: 8, name: "Windy City Connect", from: "Chicago", to: "Detroit", departure: "04:20 PM", arrival: "07:45 PM", price: 55, totalSeats: 40, bookedSeats: 15 },
+        { id: 9, name: "Lake Express", from: "Detroit", to: "Chicago", departure: "09:30 AM", arrival: "12:50 PM", price: 53, totalSeats: 38, bookedSeats: 10 },
+        { id: 10, name: "CoastLine", from: "San Francisco", to: "Los Angeles", departure: "07:45 AM", arrival: "12:30 PM", price: 89, totalSeats: 48, bookedSeats: 24 },
+        { id: 11, name: "Pacific Sprinter", from: "San Francisco", to: "Los Angeles", departure: "02:00 PM", arrival: "06:20 PM", price: 79, totalSeats: 46, bookedSeats: 31 }
+    ];
+
+    // helper to get current date in YYYY-MM-DD for default value
+    function getTodayDate() {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        let mm = today.getMonth() + 1;
+        let dd = today.getDate();
+        if (mm < 10) mm = '0' + mm;
+        if (dd < 10) dd = '0' + dd;
+        return `${yyyy}-${mm}-${dd}`;
+    }
+
+    // Set default date to today or tomorrow for better UX
+    const dateInput = document.getElementById('journeyDate');
+    const defaultDate = getTodayDate();
+    dateInput.value = defaultDate;
+
+    // DOM elements
+    const fromInput = document.getElementById('fromCity');
+    const toInput = document.getElementById('toCity');
+    const searchBtn = document.getElementById('searchBtn');
+    const busContainer = document.getElementById('busListContainer');
+    const resultCountSpan = document.getElementById('resultCountSpan');
+
+    // Seats availability tracking (dynamic in-memory booking)
+    // We'll store bookedSeats per bus id, but we want to reflect booking changes on frontend.
+    // Use a Map to ensure future booking updates persist across searches.
+    let busBookingsMap = new Map();
+    // initialize map with existing booked seats from DB
+    busesDatabase.forEach(bus => {
+        busBookingsMap.set(bus.id, { bookedSeats: bus.bookedSeats, totalSeats: bus.totalSeats });
+    });
+
+    // Helper to get current available seats for a bus
+    function getAvailableSeats(busId) {
+        const data = busBookingsMap.get(busId);
+        if (!data) return 0;
+        return data.totalSeats - data.bookedSeats;
+    }
+
+    // Helper to book a seat (decrement availability)
+    function bookSeat(busId) {
+        const data = busBookingsMap.get(busId);
+        if (data && (data.bookedSeats < data.totalSeats)) {
+            data.bookedSeats += 1;
+            busBookingsMap.set(busId, data);
+            return true;
+        }
+        return false;
+    }
+
+    // Render bus cards based on current search criteria
+    function searchAndRenderBuses() {
+        const fromVal = fromInput.value.trim();
+        const toVal = toInput.value.trim();
+        const journeyDate = dateInput.value;
+
+        if (!fromVal || !toVal) {
+            // show minimal warning but still display friendly empty
+            busContainer.innerHTML = `<div class="empty-state"><i class="fas fa-search"></i><p>Please enter both 'From' and 'To' cities</p></div>`;
+            resultCountSpan.innerText = `Missing route info`;
+            return;
+        }
+
+        // filter buses that match from and to (case-insensitive)
+        const filtered = busesDatabase.filter(bus =>
+            bus.from.toLowerCase() === fromVal.toLowerCase() &&
+            bus.to.toLowerCase() === toVal.toLowerCase()
+        );
+
+        if (filtered.length === 0) {
+            busContainer.innerHTML = `<div class="empty-state"><i class="fas fa-bus"></i><p>No buses found from ${escapeHtml(fromVal)} to ${escapeHtml(toVal)}.<br>Try different cities like New York → Boston or Chicago → Detroit.</p></div>`;
+            resultCountSpan.innerText = `0 buses available`;
+            return;
+        }
+
+        // build HTML for each bus card with real-time availability from map
+        let cardsHtml = '';
+        filtered.forEach(bus => {
+            const availableSeats = getAvailableSeats(bus.id);
+            const isSoldOut = availableSeats <= 0;
+            const seatText = isSoldOut ? "Sold out" : `${availableSeats} seats left`;
+            const seatClass = availableSeats <= 3 && !isSoldOut ? "seat-info" : "seat-info";
+            
+            cardsHtml += `
+                <div class="bus-card" data-bus-id="${bus.id}">
+                    <div class="bus-info">
+                        <div class="bus-name">
+                            <i class="fas fa-bus"></i> ${escapeHtml(bus.name)}
+                        </div>
+                        <div class="route-detail">
+                            <span><i class="fas fa-hourglass-start"></i> <span class="time">${bus.departure}</span></span>
+                            <span><i class="fas fa-arrow-right"></i></span>
+                            <span><i class="fas fa-hourglass-end"></i> <span class="time">${bus.arrival}</span></span>
+                        </div>
+                        <div><i class="fas fa-map-pin"></i> ${escapeHtml(bus.from)} → ${escapeHtml(bus.to)}</div>
+                        <div class="${seatClass}"><i class="fas fa-chair"></i> ${seatText}</div>
+                    </div>
+                    <div class="price-section">
+                        <div class="price">$${bus.price}</div>
+                        <div style="font-size:0.7rem; color:#54708f;">per seat</div>
+                    </div>
+                    <button class="book-btn" data-id="${bus.id}" data-name="${escapeHtml(bus.name)}" data-price="${bus.price}" ${isSoldOut ? 'disabled' : ''}>
+                        <i class="fas fa-ticket"></i> ${isSoldOut ? 'Sold Out' : 'Book Now'}
+                    </button>
+                </div>
+            `;
+        });
+
+        busContainer.innerHTML = cardsHtml;
+        resultCountSpan.innerText = `${filtered.length} bus(es) found for ${escapeHtml(fromVal)} → ${escapeHtml(toVal)} on ${journeyDate || 'selected date'}`;
+
+        // Attach event listeners to all book buttons after rendering
+        document.querySelectorAll('.book-btn').forEach(btn => {
+            if (!btn.disabled) {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const busId = parseInt(btn.getAttribute('data-id'));
+                    const busName = btn.getAttribute('data-name');
+                    const price = btn.getAttribute('data-price');
+                    handleBooking(busId, busName, price);
+                });
+            }
+        });
+    }
+
+    // Helper for escaping user input to avoid injection
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+
+    // Booking logic with modal popup and realtime seat updates
+    function handleBooking(busId, busName, price) {
+        // Check again available seats from current map
+        const available = getAvailableSeats(busId);
+        if (available <= 0) {
+            alert("Sorry, this bus is fully booked! Please choose another one.");
+            // re-render to reflect sold out state (disable button)
+            searchAndRenderBuses();
+            return;
+        }
+
+        // confirm with user a nice little confirm? we can show modal directly after booking
+        const confirmBooking = confirm(`Book 1 ticket on ${busName}?\n💰 Price: $${price}\n✅ Proceed to booking?`);
+        if (!confirmBooking) return;
+
+        // perform seat booking
+        const success = bookSeat(busId);
+        if (success) {
+            // Show modal success
+            const modal = document.getElementById('bookingModal');
+            const modalMsg = document.getElementById('modalMessage');
+            modalMsg.innerHTML = `You have successfully booked 1 seat on <strong>${busName}</strong> for $${price}.<br>E-ticket sent to your email! 🎫`;
+            modal.style.display = 'flex';
+            // re-render the bus list to update available seats & button states
+            searchAndRenderBuses();
+        } else {
+            alert("Booking failed: No seats left. Please refresh and try again.");
+            searchAndRenderBuses();
+        }
+    }
+
+    // Modal close logic
+    const modal = document.getElementById('bookingModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    function closeModal() {
+        modal.style.display = 'none';
+    }
+    closeModalBtn.addEventListener('click', closeModal);
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+
+    // Helper to reset default search example on load: show New York -> Boston buses
+    function loadDefaultRoute() {
+        // set default city values and trigger search
+        fromInput.value = "New York";
+        toInput.value = "Boston";
+        dateInput.value = getTodayDate();
+        searchAndRenderBuses();
+    }
+
+    // event listener for search button
+    searchBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        searchAndRenderBuses();
+    });
+
+    // also allow Enter key on inputs (nice ux)
+    const inputs = [fromInput, toInput, dateInput];
+    inputs.forEach(inp => {
+        inp.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                searchAndRenderBuses();
+            }
+        });
+    });
+
+    // initial load with default (NY -> Boston)
+    loadDefaultRoute();
+
+    // Additional: provide dynamic tooltip for date validation (just nice placeholder)
+    // also a helper to show how many seats updated in real time after booking.
+    // All good and user friendly.
+</script>
+</body>
+</html>
