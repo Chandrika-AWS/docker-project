@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>CineBook - Movie Ticket Booking Platform</title>
+    <!-- Google Fonts + Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(145deg, #0f0c1f 0%, #1a1630 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #2a2438;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f5c518;
+            border-radius: 10px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+        }
+
+        /* Header Section */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(245, 197, 24, 0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            font-size: 2.2rem;
+            color: #f5c518;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, #f5c518);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo span {
+            font-size: 0.8rem;
+            color: #a0a0c0;
+            margin-left: 4px;
+        }
+
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            background: rgba(255,255,255,0.08);
+            padding: 12px 18px;
+            border-radius: 40px;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .cart-icon:hover {
+            background: rgba(245, 197, 24, 0.2);
+        }
+
+        .cart-icon i {
+            font-size: 1.5rem;
+            color: #f5c518;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(12px);
+            border-radius: 60px;
+            padding: 0.8rem 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid rgba(245,197,24,0.4);
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: #e0e0ff;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: #f5c518;
+            border-color: #f5c518;
+            color: #1a1630;
+            font-weight: 600;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: rgba(0,0,0,0.4);
+            border-radius: 40px;
+            padding: 5px 15px;
+            gap: 8px;
+        }
+
+        .search-box i {
+            color: #f5c518;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            padding: 8px;
+            color: white;
+            outline: none;
+            font-size: 0.9rem;
+            width: 200px;
+        }
+
+        .search-box input::placeholder {
+            color: #aaa;
+        }
+
+        /* Movies Grid */
+        .section-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 1.5rem 0 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: #f5c518;
+        }
+
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Movie Card */
+        .movie-card {
+            background: linear-gradient(145deg, #1e1a36, #16122b);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid rgba(245,197,24,0.2);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+        }
+
+        .movie-card:hover {
+            transform: translateY(-8px);
+            border-color: #f5c518;
+            box-shadow: 0 20px 35px -8px rgba(245,197,24,0.2);
+        }
+
+        .movie-poster {
+            height: 320px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-start;
+            padding: 12px;
+        }
+
+        .rating {
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #f5c518;
+        }
+
+        .movie-info {
+            padding: 1.2rem;
+        }
+
+        .movie-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .movie-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 0.75rem;
+            color: #b0aad0;
+            margin-bottom: 12px;
+        }
+
+        .book-ticket-btn {
+            width: 100%;
+            background: #f5c518;
+            border: none;
+            padding: 10px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #1a1630;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .book-ticket-btn:hover {
+            background: #ffdd44;
+            transform: scale(0.98);
+        }
+
+        /* Modal for Seat Selection */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.2s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: #1e1a36;
+            border-radius: 32px;
+            max-width: 650px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 1.8rem;
+            border: 1px solid #f5c518;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(245,197,24,0.3);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #f5c518;
+        }
+
+        .screen {
+            background: #2a2438;
+            text-align: center;
+            padding: 10px;
+            margin: 1rem 0 1.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            color: #f5c518;
+            font-weight: 600;
+        }
+
+        .seats-container {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 12px;
+            margin-bottom: 1.8rem;
+            justify-items: center;
+        }
+
+        .seat {
+            width: 42px;
+            height: 42px;
+            background: #2e2a44;
+            border-radius: 12px 12px 8px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #b5b0d4;
+        }
+
+        .seat.available:hover {
+            background: #f5c518;
+            color: #1a1630;
+            transform: scale(1.05);
+        }
+
+        .seat.selected {
+            background: #4caf50;
+            color: white;
+            box-shadow: 0 0 10px #4caf50;
+        }
+
+        .seat.booked {
+            background: #555074;
+            cursor: not-allowed;
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 1rem 0;
+            font-size: 0.7rem;
+        }
+
+        .legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .booking-summary {
+            background: #16122b;
+            padding: 1rem;
+            border-radius: 20px;
+            margin-top: 1rem;
+        }
+
+        .confirm-booking {
+            background: #f5c518;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 800;
+            font-size: 1rem;
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        /* Cart Sidebar */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100%;
+            background: #13102a;
+            box-shadow: -5px 0 30px rgba(0,0,0,0.8);
+            z-index: 1100;
+            transition: 0.3s ease;
+            padding: 1.5rem;
+            overflow-y: auto;
+            border-left: 3px solid #f5c518;
+        }
+
+        .cart-sidebar.open {
+            right: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .cart-items {
+            margin-bottom: 1.5rem;
+        }
+
+        .cart-item {
+            background: rgba(255,255,255,0.05);
+            margin-bottom: 12px;
+            padding: 12px;
+            border-radius: 16px;
+        }
+
+        .total-price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-top: 1px solid #f5c518;
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+
+        .checkout-btn {
+            background: #4caf50;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 40px;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1050;
+        }
+
+        .empty-cart {
+            text-align: center;
+            color: #aaa;
+            padding: 2rem;
+        }
+
+        @media (max-width: 700px) {
+            .container { padding: 1rem; }
+            .seats-container { gap: 6px; }
+            .seat { width: 32px; height: 32px; font-size: 0.6rem; }
+            .cart-sidebar { width: 100%; right: -100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="logo">
+            <i class="fas fa-film"></i>
+            <h1>CineBook <span>| reserve your seat</span></h1>
+        </div>
+        <div class="cart-icon" id="cartIcon">
+            <i class="fas fa-ticket-alt"></i>
+            <span class="cart-count" id="cartCount">0</span>
+        </div>
+    </div>
+
+    <div class="filter-bar">
+        <div class="filter-group">
+            <button class="filter-btn active" data-gener="all">All Movies</button>
+            <button class="filter-btn" data-gener="action">Action 🔥</button>
+            <button class="filter-btn" data-gener="drama">Drama 🎭</button>
+            <button class="filter-btn" data-gener="sci-fi">Sci-Fi 🚀</button>
+            <button class="filter-btn" data-gener="comedy">Comedy 😂</button>
+        </div>
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search movie...">
+        </div>
+    </div>
+
+    <div class="section-title">
+        <i class="fas fa-popcorn"></i>
+        <h2>Now Showing</h2>
+    </div>
+    <div class="movies-grid" id="moviesGrid"></div>
+</div>
+
+<!-- Seat Selection Modal -->
+<div id="seatModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalMovieTitle">Movie Title</h3>
+            <button class="close-modal" id="closeModalBtn">&times;</button>
+        </div>
+        <div class="screen">
+            <i class="fas fa-tv"></i> SCREEN
+        </div>
+        <div class="seats-container" id="seatsGrid"></div>
+        <div class="legend">
+            <span><i class="fas fa-couch" style="color:#2e2a44"></i> Available</span>
+            <span><i class="fas fa-check-circle" style="color:#4caf50"></i> Selected</span>
+            <span><i class="fas fa-ban" style="color:#555074"></i> Booked</span>
+        </div>
+        <div class="booking-summary">
+            <p><strong>Selected Seats:</strong> <span id="selectedSeatsDisplay">None</span></p>
+            <p><strong>Total Price:</strong> $<span id="totalPriceDisplay">0</span></p>
+        </div>
+        <button class="confirm-booking" id="confirmBookingBtn">Confirm Booking</button>
+    </div>
+</div>
+
+<!-- Cart Sidebar -->
+<div id="cartSidebar" class="cart-sidebar">
+    <div class="cart-header">
+        <h3><i class="fas fa-ticket-alt"></i> My Bookings</h3>
+        <button id="closeCartBtn" style="background:none; border:none; color:#f5c518; font-size:1.5rem; cursor:pointer;">&times;</button>
+    </div>
+    <div id="cartItemsList" class="cart-items"></div>
+    <div class="total-price">
+        Total: $<span id="cartTotalPrice">0</span>
+    </div>
+    <button class="checkout-btn" id="checkoutBtn"><i class="fas fa-credit-card"></i> Complete Payment</button>
+</div>
+<div id="overlay" class="overlay"></div>
+
+<script>
+    // MOVIE DATABASE
+    const movies = [
+        { id: 1, title: "Dune: Part Two", genre: "sci-fi", rating: "8.9", duration: "2h 46m", poster: "https://image.tmdb.org/t/p/w500/8b8d8dj6H2Kwn7qzqQnVpz1n3Vl.jpg", price: 14 },
+        { id: 2, title: "John Wick 4", genre: "action", rating: "8.5", duration: "2h 49m", poster: "https://image.tmdb.org/t/p/w500/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg", price: 15 },
+        { id: 3, title: "Oppenheimer", genre: "drama", rating: "8.8", duration: "3h", poster: "https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg", price: 13 },
+        { id: 4, title: "Barbie", genre: "comedy", rating: "7.8", duration: "1h 54m", poster: "https://image.tmdb.org/t/p/w500/iuFNMS8U5cb6xfzi51Dbkovj7vM.jpg", price: 12 },
+        { id: 5, title: "The Batman", genre: "action", rating: "8.3", duration: "2h 56m", poster: "https://image.tmdb.org/t/p/w500/74xTEQt7a1QKf4JjqjRzJh2VcZV.jpg", price: 14 },
+        { id: 6, title: "Interstellar", genre: "sci-fi", rating: "9.0", duration: "2h 49m", poster: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg", price: 13 },
+        { id: 7, title: "The Whale", genre: "drama", rating: "8.1", duration: "1h 57m", poster: "https://image.tmdb.org/t/p/w500/jQ0gRyJpVQiVl4zVl5V6lP8pVpJ.jpg", price: 11 },
+        { id: 8, title: "Deadpool 3", genre: "action", rating: "8.2", duration: "2h 10m", poster: "https://image.tmdb.org/t/p/w500/8cdWjvZcORjVhLrXbm4mKfL6lQc.jpg", price: 16 }
+    ];
+    // Fallback poster if any fails
+    for(let m of movies) if(!m.poster || m.poster.includes('undefined')) m.poster = "https://via.placeholder.com/300x450/2a2438/f5c518?text=Cinema";
+
+    // Mock seat layouts (7x8 grid, 56 seats) for each movie, we store booked seats per movie
+    let seatAvailability = new Map(); // key: movieId, value: array of booked indexes (0-55)
+    
+    function initSeatsForMovie(movieId) {
+        if(!seatAvailability.has(movieId)) {
+            // randomly pre-book some seats for realism (15-25% booked)
+            let booked = [];
+            const totalSeats = 56;
+            const bookedCount = Math.floor(Math.random() * 14) + 8; // 8 to 22 booked seats
+            for(let i=0; i<bookedCount; i++) {
+                let rand = Math.floor(Math.random() * totalSeats);
+                if(!booked.includes(rand)) booked.push(rand);
+            }
+            seatAvailability.set(movieId, booked);
+        }
+        return seatAvailability.get(movieId);
+    }
+
+    // Cart management: each item = { movieId, movieTitle, seats: [seatNumbers], totalPrice }
+    let cart = [];
+    
+    function updateCartUI() {
+        const cartCountSpan = document.getElementById('cartCount');
+        const cartItemsDiv = document.getElementById('cartItemsList');
+        const cartTotalSpan = document.getElementById('cartTotalPrice');
+        const total = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+        cartTotalSpan.innerText = total;
+        const itemCount = cart.reduce((sum, item) => sum + item.seats.length, 0);
+        cartCountSpan.innerText = itemCount;
+        
+        if(cart.length === 0) {
+            cartItemsDiv.innerHTML = '<div class="empty-cart"><i class="fas fa-film"></i><p>No tickets booked yet.<br>Select a movie and reserve seats!</p></div>';
+        } else {
+            cartItemsDiv.innerHTML = cart.map((item, idx) => `
+                <div class="cart-item">
+                    <div><strong>${item.movieTitle}</strong></div>
+                    <div style="font-size:0.8rem;">Seats: ${item.seats.join(', ')}</div>
+                    <div>$${item.totalPrice}</div>
+                    <button class="remove-item" data-index="${idx}" style="margin-top:6px; background:#ff4757; border:none; padding:4px 12px; border-radius:20px; color:white; cursor:pointer;">Remove</button>
+                </div>
+            `).join('');
+            document.querySelectorAll('.remove-item').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const idx = parseInt(btn.getAttribute('data-index'));
+                    cart.splice(idx, 1);
+                    updateCartUI();
+                    saveCartToLocal();
+                });
+            });
+        }
+    }
+    
+    function saveCartToLocal() {
+        localStorage.setItem('cinebook_cart', JSON.stringify(cart));
+    }
+    
+    function loadCartFromLocal() {
+        const saved = localStorage.getItem('cinebook_cart');
+        if(saved) {
+            try {
+                cart = JSON.parse(saved);
+                updateCartUI();
+            } catch(e) {}
+        }
+    }
+    
+    // Render movies with filter & search
+    let currentFilter = "all";
+    let currentSearch = "";
+    
+    function renderMovies() {
+        let filtered = movies.filter(movie => {
+            if(currentFilter !== "all" && movie.genre !== currentFilter) return false;
+            if(currentSearch && !movie.title.toLowerCase().includes(currentSearch.toLowerCase())) return false;
+            return true;
+        });
+        
+        const grid = document.getElementById('moviesGrid');
+        if(filtered.length === 0) {
+            grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:3rem;">🎬 No movies found. Try different filter!</div>`;
+            return;
+        }
+        grid.innerHTML = filtered.map(movie => `
+            <div class="movie-card" data-id="${movie.id}">
+                <div class="movie-poster" style="background-image: linear-gradient(to top, #0f0c1f, transparent), url('${movie.poster}'); background-size: cover;">
+                    <div class="rating"><i class="fas fa-star" style="color:#f5c518;"></i> ${movie.rating}</div>
+                </div>
+                <div class="movie-info">
+                    <div class="movie-title">${movie.title}</div>
+                    <div class="movie-meta"><span><i class="far fa-clock"></i> ${movie.duration}</span><span><i class="fas fa-tag"></i> $${movie.price}</span></div>
+                    <button class="book-ticket-btn" data-movie='${JSON.stringify(movie)}'><i class="fas fa-chair"></i> Select Seats</button>
+                </div>
+            </div>
+        `).join('');
+        
+        document.querySelectorAll('.book-ticket-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const movieData = JSON.parse(btn.getAttribute('data-movie'));
+                openSeatModal(movieData);
+            });
+        });
+    }
+    
+    let currentMovieForModal = null;
+    let selectedSeatsIndices = [];
+    
+    function openSeatModal(movie) {
+        currentMovieForModal = movie;
+        selectedSeatsIndices = [];
+        document.getElementById('modalMovieTitle').innerText = movie.title;
+        const bookedSeats = initSeatsForMovie(movie.id);
+        const totalSeats = 56;
+        const seatsGrid = document.getElementById('seatsGrid');
+        seatsGrid.innerHTML = '';
+        for(let i=0; i<totalSeats; i++) {
+            const seatNum = i+1;
+            const isBooked = bookedSeats.includes(i);
+            const seatDiv = document.createElement('div');
+            seatDiv.classList.add('seat');
+            if(isBooked) {
+                seatDiv.classList.add('booked');
+                seatDiv.innerText = seatNum;
+            } else {
+                seatDiv.classList.add('available');
+                seatDiv.innerText = seatNum;
+                seatDiv.addEventListener('click', () => toggleSeatSelection(i, seatDiv));
+            }
+            seatsGrid.appendChild(seatDiv);
+        }
+        updateSeatSelectionUI();
+        document.getElementById('seatModal').style.display = 'flex';
+    }
+    
+    function toggleSeatSelection(index, element) {
+        if(element.classList.contains('booked')) return;
+        if(selectedSeatsIndices.includes(index)) {
+            selectedSeatsIndices = selectedSeatsIndices.filter(i => i !== index);
+            element.classList.remove('selected');
+        } else {
+            selectedSeatsIndices.push(index);
+            element.classList.add('selected');
+        }
+        updateSeatSelectionUI();
+    }
+    
+    function updateSeatSelectionUI() {
+        const seatNumbers = selectedSeatsIndices.map(i => i+1);
+        document.getElementById('selectedSeatsDisplay').innerText = seatNumbers.length ? seatNumbers.join(', ') : 'None';
+        const total = selectedSeatsIndices.length * (currentMovieForModal?.price || 0);
+        document.getElementById('totalPriceDisplay').innerText = total;
+    }
+    
+    function confirmBooking() {
+        if(!currentMovieForModal) return;
+        if(selectedSeatsIndices.length === 0) {
+            alert("Please select at least one seat!");
+            return;
+        }
+        const movie = currentMovieForModal;
+        const booked = seatAvailability.get(movie.id);
+        // double-check no double booking
+        for(let s of selectedSeatsIndices) {
+            if(booked.includes(s)) {
+                alert("Some seats were just booked! Please refresh selection.");
+                openSeatModal(movie);
+                return;
+            }
+        }
+        // add to booked seats
+        selectedSeatsIndices.forEach(seat => booked.push(seat));
+        seatAvailability.set(movie.id, booked);
+        
+        const seatNumbers = selectedSeatsIndices.map(i => i+1);
+        const totalPrice = selectedSeatsIndices.length * movie.price;
+        cart.push({
+            movieId: movie.id,
+            movieTitle: movie.title,
+            seats: seatNumbers,
+            totalPrice: totalPrice,
+            pricePerTicket: movie.price
+        });
+        updateCartUI();
+        saveCartToLocal();
+        alert(`✅ ${selectedSeatsIndices.length} ticket(s) for "${movie.title}" added to cart!`);
+        closeModal();
+        renderMovies(); // re-render not needed but fine.
+    }
+    
+    function closeModal() {
+        document.getElementById('seatModal').style.display = 'none';
+        selectedSeatsIndices = [];
+    }
+    
+    // Cart sidebar
+    const cartSidebar = document.getElementById('cartSidebar');
+    const overlay = document.getElementById('overlay');
+    document.getElementById('cartIcon').addEventListener('click', () => {
+        cartSidebar.classList.add('open');
+        overlay.style.display = 'block';
+    });
+    function closeSidebar() {
+        cartSidebar.classList.remove('open');
+        overlay.style.display = 'none';
+    }
+    document.getElementById('closeCartBtn').addEventListener('click', closeSidebar);
+    overlay.addEventListener('click', closeSidebar);
+    
+    document.getElementById('checkoutBtn').addEventListener('click', () => {
+        if(cart.length === 0) {
+            alert("Your cart is empty! Book some tickets first.");
+            return;
+        }
+        alert(`🎉 Thank you for booking! Total: $${cart.reduce((s,i)=>s+i.totalPrice,0)}. Enjoy the movie! 🍿\n(Simulated payment)`);
+        cart = [];
+        updateCartUI();
+        saveCartToLocal();
+        closeSidebar();
+    });
+    
+    // Event listeners for filter & search
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentFilter = btn.getAttribute('data-gener');
+            renderMovies();
+        });
+    });
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        currentSearch = e.target.value;
+        renderMovies();
+    });
+    document.getElementById('confirmBookingBtn').addEventListener('click', confirmBooking);
+    document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+    window.addEventListener('click', (e) => {
+        if(e.target === document.getElementById('seatModal')) closeModal();
+    });
+    
+    loadCartFromLocal();
+    renderMovies();
+</script>
+</body>
+</html>
