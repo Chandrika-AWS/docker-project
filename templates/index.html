@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Table Booking System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .booking-system {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #666;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+            margin-bottom: -2px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .availability-result, .my-bookings {
+            margin-top: 30px;
+        }
+
+        .table-card, .booking-card {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+
+        .table-card h4, .booking-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .booking-card {
+            position: relative;
+        }
+
+        .cancel-btn {
+            background: #dc3545;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .cancel-btn:hover {
+            background: #c82333;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .booking-system {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🍽️ Restaurant Table Booking</h1>
+            <p>Reserve your table for an unforgettable dining experience</p>
+        </header>
+
+        <div class="booking-system">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('book')">Book a Table</button>
+                <button class="tab-btn" onclick="switchTab('view')">My Bookings</button>
+            </div>
+
+            <div id="book-tab" class="tab-content active">
+                <form id="bookingForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Full Name *</label>
+                            <input type="text" id="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input type="email" id="email" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone">Phone Number *</label>
+                            <input type="tel" id="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="guests">Number of Guests *</label>
+                            <input type="number" id="guests" min="1" max="20" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="date">Date *</label>
+                            <input type="date" id="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="time">Time *</label>
+                            <select id="time" required>
+                                <option value="">Select time</option>
+                                <option value="11:00">11:00 AM</option>
+                                <option value="12:00">12:00 PM</option>
+                                <option value="13:00">1:00 PM</option>
+                                <option value="14:00">2:00 PM</option>
+                                <option value="17:00">5:00 PM</option>
+                                <option value="18:00">6:00 PM</option>
+                                <option value="19:00">7:00 PM</option>
+                                <option value="20:00">8:00 PM</option>
+                                <option value="21:00">9:00 PM</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="table">Select Table</label>
+                        <select id="table">
+                            <option value="">Check availability first</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="requests">Special Requests</label>
+                        <textarea id="requests" rows="3" placeholder="Any dietary restrictions or special requests?"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <button type="button" onclick="checkAvailability()">Check Availability</button>
+                        <button type="submit">Confirm Booking</button>
+                    </div>
+                </form>
+                <div id="availabilityResult" class="availability-result"></div>
+            </div>
+
+            <div id="view-tab" class="tab-content">
+                <div class="form-group">
+                    <label for="viewEmail">Enter your email to view bookings</label>
+                    <div class="form-row">
+                        <input type="email" id="viewEmail" placeholder="your@email.com">
+                        <button onclick="viewBookings()">View My Bookings</button>
+                    </div>
+                </div>
+                <div id="bookingsResult" class="my-bookings"></div>
+            </div>
+
+            <div id="alert" class="alert"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentAvailableTables = [];
+
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('date').min = today;
+
+        async function checkAvailability() {
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            const guests = document.getElementById('guests').value;
+
+            if (!date || !time || !guests) {
+                showAlert('Please fill in date, time and number of guests', 'error');
+                return;
+            }
+
+            showAlert('Checking availability...', 'success');
+
+            try {
+                const response = await fetch(`/api/availability?date=${date}&time=${time}&guests=${guests}`);
+                const tables = await response.json();
+                
+                const tableSelect = document.getElementById('table');
+                const resultDiv = document.getElementById('availabilityResult');
+                
+                if (tables.length === 0) {
+                    resultDiv.innerHTML = '<div class="alert error" style="display:block">No tables available for this time slot. Please try another time.</div>';
+                    tableSelect.innerHTML = '<option value="">No tables available</option>';
+                    currentAvailableTables = [];
+                } else {
+                    currentAvailableTables = tables;
+                    tableSelect.innerHTML = '<option value="">Select a table</option>';
+                    resultDiv.innerHTML = '<h3>Available Tables:</h3>';
+                    
+                    tables.forEach(table => {
+                        tableSelect.innerHTML += `<option value="${table.id}">${table.name} (Seats ${table.capacity})</option>`;
+                        resultDiv.innerHTML += `
+                            <div class="table-card">
+                                <h4>${table.name}</h4>
+                                <p>Capacity: ${table.capacity} guests</p>
+                                <p>Status: ✓ Available</p>
+                            </div>
+                        `;
+                    });
+                    
+                    showAlert(`${tables.length} table(s) available!`, 'success');
+                }
+            } catch (error) {
+                showAlert('Error checking availability', 'error');
+            }
+        }
+
+        document.getElementById('bookingForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const tableId = document.getElementById('table').value;
+            if (!tableId) {
+                showAlert('Please check availability and select a table', 'error');
+                return;
+            }
+
+            const bookingData = {
+                customer_name: document.getElementById('name').value,
+                customer_email: document.getElementById('email').value,
+                customer_phone: document.getElementById('phone').value,
+                date: document.getElementById('date').value,
+                time: document.getElementById('time').value,
+                guests: parseInt(document.getElementById('guests').value),
+                table_id: parseInt(tableId),
+                special_requests: document.getElementById('requests').value
+            };
+
+            try {
+                const response = await fetch('/api/book', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(bookingData)
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showAlert(`✅ ${result.message} Booking ID: ${result.booking_id}`, 'success');
+                    document.getElementById('bookingForm').reset();
+                    document.getElementById('availabilityResult').innerHTML = '';
+                    document.getElementById('table').innerHTML = '<option value="">Check availability first</option>';
+                    
+                    // Reset date min
+                    document.getElementById('date').min = today;
+                } else {
+                    showAlert(`❌ ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showAlert('Error making booking', 'error');
+            }
+        });
+
+        async function viewBookings() {
+            const email = document.getElementById('viewEmail').value;
+            
+            if (!email) {
+                showAlert('Please enter your email', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/bookings/${email}`);
+                const bookings = await response.json();
+                
+                const resultDiv = document.getElementById('bookingsResult');
+                
+                if (bookings.length === 0) {
+                    resultDiv.innerHTML = '<div class="alert error" style="display:block">No bookings found for this email</div>';
+                } else {
+                    resultDiv.innerHTML = '<h3>Your Bookings:</h3>';
+                    bookings.forEach(booking => {
+                        const table = getTableName(booking.table_id);
+                        resultDiv.innerHTML += `
+                            <div class="booking-card">
+                                <h4>Booking #${booking.id}</h4>
+                                <p><strong>Name:</strong> ${booking.customer_name}</p>
+                                <p><strong>Date:</strong> ${booking.date}</p>
+                                <p><strong>Time:</strong> ${booking.time}</p>
+                                <p><strong>Guests:</strong> ${booking.guests}</p>
+                                <p><strong>Table:</strong> ${table}</p>
+                                ${booking.special_requests ? `<p><strong>Requests:</strong> ${booking.special_requests}</p>` : ''}
+                                <button class="cancel-btn" onclick="cancelBooking(${booking.id})">Cancel Booking</button>
+                            </div>
+                        `;
+                    });
+                }
+            } catch (error) {
+                showAlert('Error fetching bookings', 'error');
+            }
+        }
+
+        async function cancelBooking(bookingId) {
+            if (!confirm('Are you sure you want to cancel this booking?')) return;
+            
+            try {
+                const response = await fetch(`/api/cancel/${bookingId}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showAlert(`✅ ${result.message}`, 'success');
+                    viewBookings(); // Refresh the list
+                } else {
+                    showAlert(`❌ ${result.error}`, 'error');
+                }
+            } catch (error) {
+                showAlert('Error cancelling booking', 'error');
+            }
+        }
+
+        function getTableName(tableId) {
+            const tables = {
+                1: 'Table 1 (Window)',
+                2: 'Table 2 (Booth)',
+                3: 'Table 3 (Garden View)',
+                4: 'Table 4 (Family Table)',
+                5: 'Table 5 (Private Room)'
+            };
+            return tables[tableId] || `Table ${tableId}`;
+        }
+
+        function switchTab(tab) {
+            // Update active tab button
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show selected tab content
+            document.getElementById('book-tab').classList.remove('active');
+            document.getElementById('view-tab').classList.remove('active');
+            
+            if (tab === 'book') {
+                document.getElementById('book-tab').classList.add('active');
+            } else {
+                document.getElementById('view-tab').classList.add('active');
+            }
+            
+            // Clear alerts
+            document.getElementById('alert').className = 'alert';
+            document.getElementById('alert').style.display = 'none';
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.getElementById('alert');
+            alertDiv.className = `alert ${type}`;
+            alertDiv.textContent = message;
+            alertDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                alertDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Auto-hide availability result when date/time changes
+        document.getElementById('date').addEventListener('change', () => {
+            document.getElementById('availabilityResult').innerHTML = '';
+        });
+        document.getElementById('time').addEventListener('change', () => {
+            document.getElementById('availabilityResult').innerHTML = '';
+        });
+        document.getElementById('guests').addEventListener('change', () => {
+            document.getElementById('availabilityResult').innerHTML = '';
+        });
+    </script>
+</body>
+</html>
