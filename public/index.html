@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RailWays - Train Ticket Booking System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-train"></i>
+                <span>RailWays</span>
+            </div>
+            <div class="nav-links">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#search" class="nav-link">Search Trains</a>
+                <a href="#my-bookings" class="nav-link">My Bookings</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Book Your Train Tickets</h1>
+            <p>Safe, Secure & Hassle-free train ticket booking</p>
+            <button onclick="scrollToSearch()" class="btn-primary">
+                <i class="fas fa-search"></i> Search Trains
+            </button>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section id="search" class="search-section">
+        <div class="container">
+            <h2 class="section-title">Search Trains</h2>
+            <div class="search-card">
+                <div class="search-form">
+                    <div class="form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> From</label>
+                        <input type="text" id="fromStation" placeholder="Enter departure station" list="stations">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> To</label>
+                        <input type="text" id="toStation" placeholder="Enter arrival station" list="stations">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar"></i> Journey Date</label>
+                        <input type="date" id="journeyDate">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-chair"></i> Class</label>
+                        <select id="classType">
+                            <option value="sleeper">Sleeper (SL)</option>
+                            <option value="ac3">AC 3 Tier (3A)</option>
+                            <option value="ac2">AC 2 Tier (2A)</option>
+                            <option value="ac1">AC 1st Class (1A)</option>
+                            <option value="chair">Chair Car (CC)</option>
+                            <option value="executive">Executive (EC)</option>
+                        </select>
+                    </div>
+                    <button onclick="searchTrains()" class="btn-search">
+                        <i class="fas fa-search"></i> Search Trains
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search Results -->
+            <div id="searchResults" class="search-results"></div>
+        </div>
+    </section>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Book Ticket</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div id="bookingForm"></div>
+        </div>
+    </div>
+
+    <!-- My Bookings Section -->
+    <section id="my-bookings" class="bookings-section">
+        <div class="container">
+            <h2 class="section-title">My Bookings</h2>
+            <div class="email-search">
+                <input type="email" id="searchEmail" placeholder="Enter your email to view bookings">
+                <button onclick="searchBookings()" class="btn-secondary">
+                    <i class="fas fa-search"></i> View Bookings
+                </button>
+            </div>
+            <div id="bookingsList" class="bookings-list"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 RailWays. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
